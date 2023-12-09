@@ -1,0 +1,199 @@
+<div class="md:p-4 p-2 w-[1200px] max-w-full m-auto mt-4 mb-2">
+  <div class="w-full bg-white mb-4 rounded-md md:p-4 p-2">
+    <h1 class="text-xl my-2">Team Members {{ "( " + team.length + " )" }}</h1>
+    <div class="flex justify-between items-center gap-2">
+      <input
+        type="text"
+        class="w-full border px-4 py-2 rounded-md flex-1"
+        placeholder="Team Name..."
+        [(ngModel)]="teamName"
+      />
+      <button
+        class="w-20 md:w-40 text-sm h-10 px-5 rounded-md bg-blue-500 text-white"
+        (click)="saveTeamToLocal()"
+      >
+        Save
+      </button>
+    </div>
+
+    <div *ngIf="team.length == 0" class="md:p-4 p-2 my-2">
+      <p class="text-center text-sm text-gray-500">No member to show</p>
+    </div>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 my-2 max-w-full"
+      *ngIf="team.length != 0"
+    >
+      <div *ngFor="let card of team" class="w-full p-4 rounded-lg border">
+        <div class="flex h-10 gap-2 items-center mb-4">
+          <img
+            src="{{ card.avatar }}"
+            alt="Avatar"
+            class="rounded-full border border-gray-300 h-10 w-10"
+          />
+          <span class="text-sm md:text-[16px] text-gray-700 flex-nowrap">{{
+            card.first_name + " " + card.last_name
+          }}</span>
+        </div>
+        <div class="h-10 flex justify-between items-center">
+          <span
+            class="text-[11px] md:text-[11px] h-6 px-4 flex justify-center items-center bg-gray-50 text-gray-400 border border-gray-400 rounded-full"
+            >{{ card.domain }}</span
+          >
+          <span
+            class="text-[11px] md:text-sm h-6 flex justify-center items-center text-gray-600"
+            >{{ card.gender }}</span
+          >
+        </div>
+        <div class="h-10 flex justify-between items-center">
+          <span
+            class="text-[11px] md:text-sm h-6 flex justify-center items-center rounded-full"
+            [ngClass]="card.available ? ' text-green-400  ' : ' text-red-400 '"
+            >{{ card.available ? "Available" : "Not Available" }}</span
+          >
+          <span
+            class="w-9 h-9 rounded-full border bg-gray-100 text-black flex justify-center items-center hover:cursor-pointer"
+            *ngIf="card.available"
+            (click)="addToTeam(card.id, card.domain, card)"
+          >
+            <i
+              class="fa-solid"
+              [ngClass]="isUserExists(card.id) ? 'fa-minus' : 'fa-plus'"
+            ></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-white p-2 py-4 md:p-4 flex justify-between flex-wrap gap-2 rounded-md"
+  >
+    <input
+      type="text"
+      [(ngModel)]="nameSearch"
+      placeholder="Search by Name"
+      class="border h-10 border-gray-300 px-3 rounded-md flex-1"
+    />
+    <select
+      [(ngModel)]="selectedDomain"
+      class="border h-10 border-gray-300 px-3 rounded-md flex-1"
+    >
+      <option value="">Select Domain</option>
+      <option *ngFor="let domain of domains" [value]="domain">
+        {{ domain }}
+      </option>
+    </select>
+    <select
+      [(ngModel)]="selectedGender"
+      class="border h-10 border-gray-300 px-3 rounded-md flex-1"
+    >
+      <option value="">Select Gender</option>
+      <option *ngFor="let gender of genders" [value]="gender">
+        {{ gender }}
+      </option>
+    </select>
+    <select
+      [(ngModel)]="selectedAvailability"
+      class="border h-10 border-gray-300 px-3 rounded-md flex-1"
+    >
+      <option value="">Select Availability</option>
+      <option value="true">Available</option>
+      <option value="false">Not Available</option>
+    </select>
+    <button
+      (click)="clearFilters()"
+      class="border h-10 px-3 rounded-full bg-gray-100 text-sm flex-1"
+    >
+      Clear Filters
+    </button>
+    <button
+      (click)="applyFilters()"
+      class="h-10 px-5 rounded-full bg-blue-500 text-white flex-1"
+    >
+      Apply
+    </button>
+  </div>
+</div>
+
+<div>
+  <p class="text-center mb-2 text-gray-500">
+    {{ this.filteredData.length }} users found
+  </p>
+</div>
+<div
+  class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 md:p-4 p-2 m-auto w-[1200px] my-2 max-w-full"
+>
+  <div
+    *ngFor="let card of paginatedData"
+    class="w-full p-4 rounded-lg bg-white"
+  >
+    <div class="flex h-10 gap-2 items-center mb-4">
+      <img
+        src="{{ card.avatar }}"
+        alt="Avatar"
+        class="rounded-full border border-gray-300 h-10 w-10"
+      />
+      <span class="text-sm md:text-[16px] text-gray-700 flex-nowrap">{{
+        card.first_name + " " + card.last_name
+      }}</span>
+    </div>
+    <div class="h-10 flex justify-between items-center">
+      <span
+        class="text-[11px] md:text-[11px] h-6 px-4 flex justify-center items-center bg-gray-50 text-gray-400 border border-gray-400 rounded-full"
+        >{{ card.domain }}</span
+      >
+      <span
+        class="text-[11px] md:text-sm h-6 flex justify-center items-center text-gray-600"
+        >{{ card.gender }}</span
+      >
+    </div>
+    <div class="h-10 flex justify-between items-center">
+      <span
+        class="text-[11px] md:text-sm h-6 flex justify-center items-center rounded-full"
+        [ngClass]="card.available ? ' text-green-400  ' : ' text-red-400 '"
+        >{{ card.available ? "Available" : "Not Available" }}</span
+      >
+      <span
+        class="w-9 h-9 rounded-full border bg-gray-100 text-black flex justify-center items-center hover:cursor-pointer"
+        *ngIf="card.available"
+        (click)="addToTeam(card.id, card.domain, card)"
+      >
+        <i
+          class="fa-solid"
+          [ngClass]="isUserExists(card.id) ? 'fa-minus' : 'fa-plus'"
+        ></i>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div
+  class="m-auto w-[1200px] my-2 p-2 max-w-full flex justify-between items-center bg-white rounded-full"
+>
+  <button
+    (click)="goToPrevious()"
+    class="w-8 h-8 text-[10px] md:text-[16px] md:w-10 md:h-10 bg-gray-100 flex items-center justify-center rounded-full"
+  >
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+  <div class="flex justify-center items-center gap-1 md:gap-2">
+    <button
+      *ngFor="let page of pages.slice(currentPage - 1, currentPage + 4)"
+      (click)="setPage(page)"
+      class="w-8 h-8 text-[10px] md:text-[16px] md:w-10 md:h-10 flex items-center justify-center rounded-full"
+      [ngClass]="
+        page === currentPage
+          ? 'bg-blue-500 text-white'
+          : 'bg-gray-100 text-black'
+      "
+    >
+      {{ page }}
+    </button>
+  </div>
+
+  <button
+    (click)="goToNext()"
+    class="w-8 h-8 text-[10px] md:text-[16px] md:w-10 md:h-10 bg-gray-100 flex items-center justify-center rounded-full"
+  >
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
+</div>

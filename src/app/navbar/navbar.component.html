@@ -1,0 +1,31 @@
+<nav class="w-full h-20 sticky top-0 left-0 z-50 shadow-sm bg-white">
+  <div
+    class="m-auto w-[1200px] max-w-full flex justify-between items-center h-20 pl-4 pr-4 bg-white"
+  >
+    <a routerLink="" class="text-2xl font-semibold text-gray-800"> Heliverse</a>
+    <div
+      [ngClass]="isOpen ? 'top-20 ' : 'top-[-60px]'"
+      class="fixed -z-10 md:z-0 left-0 w-full flex bg-white p-8 border-y-2 flex-col duration-500 transition-all gap-6 text-[16px] text-gray-500 md:flex md:static md:w-auto md:p-0 md:border-0 md:top-auto md:left-auto md:flex-row"
+    >
+      <a
+        routerLink=""
+        routerLinkActive="font-semibold text-blue-600"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="toggleNav()"
+        >Create</a
+      >
+      <a
+        routerLink="/team"
+        routerLinkActive="font-semibold text-blue-600"
+        (click)="toggleNav()"
+        >Team</a
+      >
+    </div>
+    <div
+      class="flex text-xl text-gray-500 md:hidden hover:cursor-pointer"
+      (click)="toggleNav()"
+    >
+      <i class="fa-solid fa-bars"></i>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,55 @@
+<div class="w-[1200px] max-w-full m-auto my-8 p-2 md:p-0">
+  <div class="w-full bg-white rounded-md md:p-4 p-2" *ngIf="isCreated">
+    <h1 class="text-xl my-2 font-semibold">{{ team?.teamName }}</h1>
+    <h1 class="text-[16px] my-2">
+      Team Members {{ "( " + team?.members?.length + " )" }}
+    </h1>
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 my-2 max-w-full"
+    >
+      <div
+        *ngFor="let card of team?.members"
+        class="w-full p-4 rounded-lg border"
+      >
+        <div class="flex h-10 gap-2 items-center mb-4">
+          <img
+            src="{{ card.avatar }}"
+            alt="Avatar"
+            class="rounded-full border border-gray-300 h-10 w-10"
+          />
+          <span class="text-sm md:text-[16px] text-gray-700 flex-nowrap">{{
+            card.first_name + " " + card.last_name
+          }}</span>
+        </div>
+        <div class="h-10 flex justify-between items-center">
+          <span
+            class="text-[11px] md:text-[11px] h-6 px-4 flex justify-center items-center bg-gray-50 text-gray-400 border border-gray-400 rounded-full"
+            >{{ card.domain }}</span
+          >
+          <span
+            class="text-[11px] md:text-sm h-6 flex justify-center items-center text-gray-600"
+            >{{ card.gender }}</span
+          >
+        </div>
+        <div class="h-10 flex justify-between items-center">
+          <span
+            class="text-[11px] md:text-sm h-6 flex justify-center items-center rounded-full"
+            [ngClass]="card.available ? ' text-green-400  ' : ' text-red-400 '"
+            >{{ card.available ? "Available" : "Not Available" }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="w-full bg-white rounded-md md:p-4 p-2 text-center"
+    *ngIf="!isCreated"
+  >
+    <h1 class="text-xl my-2 font-semibold">No team exists</h1>
+    <a
+      routerLink="/create"
+      class="py-4 text-sm h-10 px-5 rounded-md bg-blue-500 text-white mt-4 mb-2 inline-flex items-center justify-center"
+      >Create Team</a
+    >
+  </div>
+</div>
